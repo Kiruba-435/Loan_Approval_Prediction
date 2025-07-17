@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>🏠 Loan Prediction Form</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <div class="form-container">
+    <h2>📝 Loan Application Details</h2>
+
+    <form id="loanForm" class="vertical-form">
+      <div class="form-row">
+        <label>👨‍👩‍👧 No. of Dependents</label>
+        <input type="number" name="dependents" required />
+      </div>
+
+      <div class="form-row">
+        <label>🎓 Education</label>
+        <select name="education">
+          <option value="0">Not Graduate</option>
+          <option value="1">Graduate</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <label>💼 Self Employed</label>
+        <select name="self_employed">
+          <option value="0">No</option>
+          <option value="1">Yes</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <label>💰 Income per Annum</label>
+        <input type="number" name="income" required />
+      </div>
+
+      <div class="form-row">
+        <label>🏦 Loan Amount</label>
+        <input type="number" name="loan_amount" required />
+      </div>
+
+      <div class="form-row">
+        <label>📆 Loan Tenure (Years)</label>
+        <input type="number" name="tenure" required />
+      </div>
+
+      <div class="form-row">
+        <label>🧮 CIBIL Score</label>
+        <input type="number" name="cibil" required />
+      </div>
+
+      <div class="form-row">
+        <label>🚗 Movable Assets Value</label>
+        <input type="number" name="movable_assets" required />
+      </div>
+
+      <div class="form-row">
+        <label>🏡 Immovable Assets Value</label>
+        <input type="number" name="immovable_assets" required />
+      </div>
+
+      <button type="submit">🔍 Predict Loan Status</button>
+    </form>
+
+    <div id="prediction-result"></div>
+  </div>
+
+  <script>
+    document.getElementById("loanForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      const data = {};
+      formData.forEach((val, key) => data[key] = Number(val));
+
+      fetch("/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          document.getElementById("prediction-result").innerText =
+            "🔮 Prediction Decision: " + data.result;
+        });
+    });
+  </script>
+</body>
+</html>
